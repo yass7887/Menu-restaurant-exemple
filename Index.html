@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Dar El Bahr — Restaurant Tunisien</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#0E3D6B;
+  --blue-d:#0A2540;
+  --blue-door:#1565A8;
+  --blue-light:#5C94C9;
+  --white:#FFFFFF;
+  --cream:#FAF8F3;
+  --terracotta:#D4622A;
+  --bougain:#C23B5E;
+  --line:#D9E4ED;
+  --gray:#7C8A99;
+}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--blue-d);font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:76px;overflow-x:hidden}
+body.rtl{direction:rtl}
+.disp{font-family:'Playfair Display',serif}
+
+/* ZELLIGE FRISE */
+.frise{height:10px;width:100%;background-image:repeating-linear-gradient(135deg,var(--blue) 0 6px,var(--white) 6px 12px,var(--blue-door) 12px 18px,var(--white) 18px 24px);opacity:0.9}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;padding:13px 18px}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-mark{width:34px;height:34px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.brand-mark svg{width:19px;height:19px;stroke:var(--white)}
+.brand-name{font-family:'Playfair Display',serif;font-weight:700;font-size:17px;letter-spacing:-0.2px;color:var(--blue-d)}
+/* LANG SWITCHER — medallion style */
+.lang-switch{position:relative}
+.lang-trigger{
+  display:flex;align-items:center;gap:7px;
+  background:var(--white);border:1.5px solid var(--blue-door);
+  border-radius:22px;padding:5px 8px 5px 6px;cursor:pointer;
+  transition:border-color .2s,box-shadow .2s;
+}
+.lang-trigger:active{transform:scale(0.97)}
+.lang-medallion{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  background:conic-gradient(from 0deg,var(--blue) 0 90deg,var(--white) 90deg 180deg,var(--blue-door) 180deg 270deg,var(--white) 270deg 360deg);
+  display:flex;align-items:center;justify-content:center;position:relative;
+  border:1px solid var(--blue);
+}
+.lang-medallion::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--cream)}
+.lang-medallion span{position:relative;font-size:9px;font-weight:700;color:var(--blue-d);z-index:1;font-family:'Playfair Display',serif}
+.lang-trigger .chev{width:13px;height:13px;stroke:var(--blue-door);flex-shrink:0;transition:transform .25s}
+.lang-switch.open .lang-trigger .chev{transform:rotate(180deg)}
+.lang-switch.open .lang-trigger{box-shadow:0 2px 10px rgba(14,61,107,0.15)}
+
+.lang-menu{
+  position:absolute;top:calc(100% + 8px);right:0;z-index:250;
+  background:var(--white);border:1.5px solid var(--blue-door);border-radius:16px;
+  padding:6px;min-width:172px;
+  box-shadow:0 8px 24px rgba(14,61,107,0.18);
+  opacity:0;visibility:hidden;transform:translateY(-6px) scale(0.97);
+  transition:all .18s ease;
+}
+.rtl .lang-menu{right:auto;left:0}
+.lang-switch.open .lang-menu{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.lang-opt{
+  display:flex;align-items:center;gap:10px;width:100%;
+  background:transparent;border:none;border-radius:11px;
+  padding:9px 10px;cursor:pointer;text-align:left;transition:background .15s;
+}
+.rtl .lang-opt{text-align:right}
+.lang-opt:hover,.lang-opt:active{background:var(--cream)}
+.lang-opt.active{background:rgba(21,101,168,0.08)}
+.lang-opt-badge{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-weight:700;font-size:10px;
+  border:1.5px solid var(--blue-door);color:var(--blue-d);background:var(--cream);
+}
+.lang-opt.active .lang-opt-badge{background:var(--blue);color:#fff;border-color:var(--blue)}
+.lang-opt-text{flex:1}
+.lang-opt-name{font-size:13px;font-weight:600;color:var(--blue-d)}
+.lang-opt-native{font-size:10px;color:var(--gray);margin-top:1px}
+.lang-opt-check{width:15px;height:15px;stroke:var(--blue-door);flex-shrink:0;opacity:0}
+.lang-opt.active .lang-opt-check{opacity:1}
+.lang-divider{height:1px;background:var(--line);margin:2px 8px}
+
+/* HERO */
+.hero{position:relative;background:var(--blue);overflow:hidden;padding:36px 20px 30px}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.06) 0, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(255,255,255,0.05) 0, transparent 45%);
+  pointer-events:none;
+}
+.hero-pattern{position:absolute;top:0;right:0;width:140px;height:140px;opacity:0.12;pointer-events:none}
+.hero-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:16px;position:relative}
+.hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#5FD68A;flex-shrink:0}
+.hero-eyebrow .dot.closed{background:var(--terracotta)}
+.hero-eyebrow span{font-size:12px;color:rgba(255,255,255,0.75);font-weight:500}
+.hero h1{font-family:'Playfair Display',serif;font-weight:700;font-size:38px;line-height:1.05;letter-spacing:-0.5px;color:var(--white);position:relative}
+.hero h1 em{color:#7FC4F0;font-style:italic}
+.hero-tag{font-size:13px;color:rgba(255,255,255,0.65);margin-top:10px;line-height:1.55;max-width:300px;position:relative}
+.hero-strip{display:flex;gap:8px;margin-top:20px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;position:relative}
+.hero-strip::-webkit-scrollbar{display:none}
+.hchip{flex-shrink:0;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:8px 12px}
+.hchip svg{width:14px;height:14px;stroke:#7FC4F0;flex-shrink:0}
+.hchip span{font-size:11px;font-weight:600;color:var(--white);white-space:nowrap}
+
+/* SECTION */
+.section{padding:30px 18px 14px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+.sec-head h2{font-family:'Playfair Display',serif;font-weight:700;font-size:23px;letter-spacing:-0.3px;color:var(--blue-d)}
+.sec-num{font-size:11px;color:var(--gray);font-weight:600}
+.sec-rule{display:flex;align-items:center;gap:6px;margin:8px 0 18px}
+.sec-rule .diamond{width:6px;height:6px;background:var(--blue-door);transform:rotate(45deg);flex-shrink:0}
+.sec-rule .ln{height:1px;flex:1;background:var(--line)}
+
+/* TABS */
+.tabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin-bottom:20px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:var(--white);border:1px solid var(--line);color:var(--blue);padding:8px 16px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.tab.active{background:var(--blue);border-color:var(--blue);color:var(--white)}
+
+/* MENU CARDS */
+.menu-grid{display:flex;flex-direction:column;gap:11px}
+.mcard{
+  background:var(--white);border:1px solid var(--line);border-radius:14px;
+  padding:14px;display:flex;gap:14px;align-items:center;position:relative;
+  transition:transform .1s,box-shadow .15s;
+  box-shadow:0 1px 3px rgba(14,61,107,0.04);
+}
+.mcard::before{
+  content:'';position:absolute;left:0;top:14px;bottom:14px;width:3px;
+  background:var(--blue-door);border-radius:0 3px 3px 0;
+}
+.mcard:active{transform:scale(0.985)}
+.dish-illust{
+  width:62px;height:62px;border-radius:50%;flex-shrink:0;
+  background:var(--cream);display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--blue-door);margin-left:6px;
+}
+.dish-illust svg{width:32px;height:32px}
+.mcard-mid{flex:1;min-width:0}
+.mcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.mcard-name{font-family:'Playfair Display',serif;font-weight:700;font-size:16px;letter-spacing:-0.1px;line-height:1.25;color:var(--blue-d)}
+.mcard-price{font-family:'Playfair Display',serif;font-weight:700;font-size:14px;color:var(--terracotta);white-space:nowrap}
+.mcard-desc{font-size:12px;color:var(--gray);margin-top:4px;line-height:1.45}
+.mcard-tag{display:inline-flex;align-items:center;gap:4px;margin-top:7px;background:rgba(21,101,168,0.08);color:var(--blue-door);font-size:10px;font-weight:700;padding:3px 9px;border-radius:7px;letter-spacing:.2px}
+
+/* HOURS */
+.hours-wrap{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.hrow{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);font-size:13px}
+.hrow:last-child{border-bottom:none}
+.hrow.today{background:rgba(21,101,168,0.05)}
+.hday{font-weight:600;color:var(--blue-d);display:flex;align-items:center;gap:8px}
+.today-pill{font-size:9px;background:var(--blue-door);color:#fff;padding:2px 7px;border-radius:7px;font-weight:700;letter-spacing:.2px}
+.htime{color:var(--gray);font-size:12px;font-variant-numeric:tabular-nums}
+.hclosed{color:var(--terracotta);font-size:12px;font-weight:700}
+
+/* REVIEWS */
+.rating-card{background:var(--blue);border-radius:14px;padding:20px;display:flex;align-items:center;gap:18px;margin-bottom:18px;position:relative;overflow:hidden}
+.rating-num{font-family:'Playfair Display',serif;font-size:46px;font-weight:700;color:var(--white);line-height:1}
+.rating-stars{color:#7FC4F0;font-size:16px;letter-spacing:2px}
+.rating-name{color:var(--white);font-size:12px;font-weight:600;margin-top:3px}
+.rating-ct{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+
+.rev-form{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.rev-form-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;color:var(--blue-d)}
+.stars-row{display:flex;gap:4px;margin-bottom:12px}
+.star-btn{font-size:25px;color:var(--line);cursor:pointer;background:none;border:none;padding:0;transition:color .12s}
+.star-btn.lit{color:var(--terracotta)}
+.rev-form textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;font-family:'Inter',sans-serif;font-size:13px;resize:none;color:var(--blue-d);background:var(--cream);outline:none;margin-bottom:10px}
+.rev-form textarea:focus{border-color:var(--blue-door)}
+.rev-submit{width:100%;background:var(--blue);color:#fff;border:none;padding:13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.rev-submit:active{opacity:.85}
+
+.rev-list{display:flex;flex-direction:column;gap:10px}
+.rev-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:15px}
+.rev-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+.rev-name{font-weight:600;font-size:13px;color:var(--blue-d)}
+.rev-date{font-size:10px;color:var(--gray)}
+.rev-stars{color:var(--terracotta);font-size:12px;margin-bottom:5px}
+.rev-text{font-size:12px;color:var(--gray);line-height:1.55}
+.verified{font-size:10px;color:#3DA35D;font-weight:600;margin-top:3px}
+
+/* CONTACT */
+.contact-grid{display:flex;flex-direction:column;gap:10px}
+.ccard{background:var(--white);border:1px solid var(--line);border-radius:13px;padding:16px;display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;transition:border-color .15s}
+.ccard:active{border-color:var(--blue-door)}
+.cicon{width:42px;height:42px;border-radius:50%;background:var(--cream);border:2px solid var(--blue-door);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cicon svg{width:18px;height:18px;stroke:var(--blue)}
+.clabel{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;font-weight:600}
+.cval{font-weight:600;font-size:14px;color:var(--blue-d)}
+
+.map-frame{margin-top:12px;border-radius:13px;overflow:hidden;border:1px solid var(--line);height:160px;background:var(--white);position:relative}
+.map-frame svg{width:100%;height:100%}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(14px);display:flex;z-index:200;border-top:1px solid var(--line)}
+.nitem{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 9px;cursor:pointer;color:var(--gray);border:none;background:transparent;transition:color .2s}
+.nitem.active{color:var(--blue-door)}
+.nitem svg{width:21px;height:21px}
+.nitem span{font-size:9px;font-weight:600;letter-spacing:.2px}
+
+/* TOAST */
+.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%) translateY(-6px);background:var(--blue-d);color:var(--white);padding:11px 20px;border-radius:11px;font-size:12px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:300;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.page{display:none}.page.active{display:block}
+
+@media(min-width:460px){.menu-grid{display:grid;grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body id="body">
+
+<div class="frise"></div>
+<div class="topbar">
+  <div class="topbar-row">
+    <div class="brand">
+      <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 9l10 6 10-6-10-7z"/><path d="M2 9v9l10 6 10-6V9"/><circle cx="12" cy="15" r="2" fill="#1565A8" stroke="none"/></svg></div>
+      <span class="brand-name">Dar El Bahr</span>
+    </div>
+    <div class="lang-switch" id="lang-switch">
+      <button class="lang-trigger" onclick="toggleLangMenu(event)">
+        <div class="lang-medallion"><span id="medallion-label">FR</span></div>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="lang-menu" id="lang-menu">
+        <button class="lang-opt active" data-lang="fr" onclick="setLang('fr')">
+          <div class="lang-opt-badge">FR</div>
+          <div class="lang-opt-text"><div class="lang-opt-name">Français</div><div class="lang-opt-native">France / Tunisie</div></div>
+          <svg class="lang-opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+        <div class="lang-divider"></div>
+        <button class="lang-opt" data-lang="en" onclick="setLang('en')">
+          <div class="lang-opt-badge">EN</div>
+          <div class="lang-opt-text"><div class="lang-opt-name">English</div><div class="lang-opt-native">International</div></div>
+          <svg class="lang-opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+        <div class="lang-divider"></div>
+        <button class="lang-opt" data-lang="ar" onclick="setLang('ar')">
+          <div class="lang-opt-badge">ع</div>
+          <div class="lang-opt-text"><div class="lang-opt-name">العربية</div><div class="lang-opt-native">تونس</div></div>
+          <svg class="lang-opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <svg class="hero-pattern" viewBox="0 0 140 140" fill="none">
+    <g stroke="#FFFFFF" stroke-width="1.5">
+      <path d="M0 35h140M0 70h140M0 105h140M35 0v140M70 0v140M105 0v140"/>
+      <circle cx="35" cy="35" r="14"/><circle cx="105" cy="35" r="14"/>
+      <circle cx="35" cy="105" r="14"/><circle cx="105" cy="105" r="14"/>
+    </g>
+  </svg>
+  <div class="hero-eyebrow">
+    <div class="dot" id="status-dot"></div>
+    <span id="open-status">Ouvert maintenant</span>
+  </div>
+  <h1 id="hero-title">Saveurs de <em>Tunisie</em>,<br/>face à la mer</h1>
+  <p class="hero-tag" id="hero-sub">Recettes traditionnelles, produits du marché, accueil chaleureux.</p>
+  <div class="hero-strip" id="hero-strip">
+    <div class="hchip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span id="chip-fresh">Produits frais</span></div>
+    <div class="hchip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span id="chip-fast">Service rapide</span></div>
+    <div class="hchip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span id="chip-rated">4.8 / 5</span></div>
+  </div>
+</div>
+<div class="frise"></div>
+
+<div class="toast" id="toast"></div>
+
+<!-- MENU -->
+<div class="page active" id="page-menu">
+  <div class="section">
+    <div class="sec-head"><h2 id="label-menu">Le menu</h2><span class="sec-num" id="dish-count">10 plats</span></div>
+    <div class="sec-rule"><div class="diamond"></div><div class="ln"></div><div class="diamond"></div></div>
+    <div class="tabs" id="menu-tabs">
+      <button class="tab active" onclick="filterMenu('all',this)" id="tab-all">Tout</button>
+      <button class="tab" onclick="filterMenu('entrees',this)" id="tab-entrees">Entrées</button>
+      <button class="tab" onclick="filterMenu('plats',this)" id="tab-plats">Plats</button>
+      <button class="tab" onclick="filterMenu('desserts',this)" id="tab-desserts">Desserts</button>
+      <button class="tab" onclick="filterMenu('boissons',this)" id="tab-boissons">Boissons</button>
+    </div>
+    <div class="menu-grid" id="menu-grid"></div>
+  </div>
+</div>
+
+<!-- HORAIRES -->
+<div class="page" id="page-horaires">
+  <div class="section">
+    <div class="sec-head"><h2 id="label-hours">Horaires</h2></div>
+    <div class="sec-rule"><div class="diamond"></div><div class="ln"></div><div class="diamond"></div></div>
+    <div class="hours-wrap" id="hours-grid"></div>
+  </div>
+</div>
+
+<!-- AVIS -->
+<div class="page" id="page-avis">
+  <div class="section">
+    <div class="sec-head"><h2 id="label-reviews">Avis</h2></div>
+    <div class="sec-rule"><div class="diamond"></div><div class="ln"></div><div class="diamond"></div></div>
+    <div class="rating-card">
+      <div class="rating-num">4.8</div>
+      <div>
+        <div class="rating-stars">★★★★★</div>
+        <div class="rating-name">Dar El Bahr</div>
+        <div class="rating-ct" id="review-count">127 avis</div>
+      </div>
+    </div>
+    <div class="rev-form">
+      <div class="rev-form-title" id="leave-review-title">Donnez votre avis</div>
+      <div class="stars-row">
+        <button class="star-btn" data-v="1" onclick="setRating(1)">★</button>
+        <button class="star-btn" data-v="2" onclick="setRating(2)">★</button>
+        <button class="star-btn" data-v="3" onclick="setRating(3)">★</button>
+        <button class="star-btn" data-v="4" onclick="setRating(4)">★</button>
+        <button class="star-btn" data-v="5" onclick="setRating(5)">★</button>
+      </div>
+      <textarea id="review-input" rows="3" placeholder="Partagez votre expérience..."></textarea>
+      <button class="rev-submit" onclick="submitReview()" id="submit-btn">Envoyer</button>
+    </div>
+    <div class="rev-list" id="reviews-list"></div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div class="section">
+    <div class="sec-head"><h2 id="label-contact">Contact</h2></div>
+    <div class="sec-rule"><div class="diamond"></div><div class="ln"></div><div class="diamond"></div></div>
+    <div class="contact-grid">
+      <a href="tel:+21671234567" class="ccard">
+        <div class="cicon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div><div class="clabel" id="c-phone-lbl">Téléphone</div><div class="cval">+216 71 234 567</div></div>
+      </a>
+      <a href="https://maps.google.com/?q=Sidi+Bou+Said+Tunis" target="_blank" class="ccard">
+        <div class="cicon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div><div class="clabel" id="c-addr-lbl">Adresse</div><div class="cval" id="c-addr-val">8 Rue Sidi Bou Saïd, Tunis</div></div>
+      </a>
+      <a href="https://instagram.com" target="_blank" class="ccard">
+        <div class="cicon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><path d="M17.5 6.5h.01"/></svg></div>
+        <div><div class="clabel">Instagram</div><div class="cval">@darelbahr.tn</div></div>
+      </a>
+      <a href="mailto:contact@darelbahr.tn" class="ccard">
+        <div class="cicon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg></div>
+        <div><div class="clabel">Email</div><div class="cval">contact@darelbahr.tn</div></div>
+      </a>
+    </div>
+    <div class="map-frame">
+      <svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="160" fill="#FAF8F3"/>
+        <g stroke="#D9E4ED" stroke-width="1">
+          <path d="M0 30h400M0 70h400M0 110h400M0 150h400"/>
+          <path d="M50 0v160M120 0v160M200 0v160M280 0v160M350 0v160"/>
+        </g>
+        <path d="M0 100 Q100 50 200 90 T400 60" stroke="#5C94C9" stroke-width="14" fill="none" opacity="0.35"/>
+        <circle cx="220" cy="82" r="9" fill="#D4622A"/>
+        <circle cx="220" cy="82" r="4" fill="#fff"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<nav class="bnav">
+  <button class="nitem active" id="nav-menu" onclick="showPage('menu')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h12"/></svg>
+    <span id="nav-menu-lbl">Menu</span>
+  </button>
+  <button class="nitem" id="nav-horaires" onclick="showPage('horaires')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    <span id="nav-hours-lbl">Horaires</span>
+  </button>
+  <button class="nitem" id="nav-avis" onclick="showPage('avis')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <span id="nav-reviews-lbl">Avis</span>
+  </button>
+  <button class="nitem" id="nav-contact" onclick="showPage('contact')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    <span id="nav-contact-lbl">Contact</span>
+  </button>
+</nav>
+
+<script>
+const ICONS = {
+  salade: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 26c0-9 7-16 16-16s16 7 16 16"/><path d="M6 26h36"/><path d="M10 26c0 6 6 11 14 11s14-5 14-11"/><path d="M18 20c1-3 3-5 6-6M28 14c2 1 4 3 5 6" stroke-width="1.5"/></svg>',
+  brik: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 18l14-8 14 8-14 8z"/><path d="M10 18v10l14 8 14-8V18"/><path d="M24 26v10" stroke-width="1.5"/></svg>',
+  couscous: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 24c0 8 7 14 16 14s16-6 16-14"/><path d="M6 24h36"/><circle cx="18" cy="19" r="1.4" fill="#1565A8" stroke="none"/><circle cx="24" cy="16" r="1.4" fill="#1565A8" stroke="none"/><circle cx="30" cy="19" r="1.4" fill="#1565A8" stroke="none"/><circle cx="21" cy="22" r="1.4" fill="#1565A8" stroke="none"/><circle cx="27" cy="22" r="1.4" fill="#1565A8" stroke="none"/></svg>',
+  poisson: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 24c6-8 14-10 20-10 8 0 14 4 16 10-2 6-8 10-16 10-6 0-14-2-20-10z"/><path d="M42 24l4-5v10l-4-5z"/><circle cx="16" cy="22" r="1.3" fill="#1565A8" stroke="none"/><path d="M14 28c2 1 5 2 8 2" stroke-width="1.5"/></svg>',
+  tajine: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 28c0 6 6 9 14 9s14-3 14-9"/><path d="M8 28h32"/><path d="M24 19c-6 0-10 4-10 9h20c0-5-4-9-10-9z"/><path d="M24 19V9M24 9c-3 0-5 2-5 4M24 9c3 0 5 2 5 4" stroke-width="1.5"/></svg>',
+  lablabi: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22c0 8 7 14 15 14s15-6 15-14"/><path d="M7 22h34"/><path d="M14 22c0-3 1-5 2-7M34 22c0-3-1-5-2-7" stroke-width="1.5"/><circle cx="20" cy="17" r="1.3" fill="#1565A8" stroke="none"/><circle cx="27" cy="15" r="1.3" fill="#1565A8" stroke="none"/></svg>',
+  makroudh: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="16" width="26" height="16" rx="2" transform="rotate(-3 24 24)"/><path d="M16 22l4 4M28 20l4 4" stroke-width="1.5"/><circle cx="24" cy="24" r="1.3" fill="#1565A8" stroke="none"/></svg>',
+  zgougou: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 38V20c0-4 4-8 8-8s8 4 8 8v18"/><path d="M14 38h20"/><path d="M20 16c1-3 2-5 4-7 2 2 3 4 4 7" stroke-width="1.5"/></svg>',
+  the: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h20l-2 16a3 3 0 01-3 3H17a3 3 0 01-3-3z"/><path d="M32 22c4 0 6 2 6 5s-2 5-6 5" stroke-width="1.5"/><path d="M18 13c0 2-2 2-2 4M24 13c0 2-2 2-2 4M30 13c0 2-2 2-2 4" stroke-width="1.5"/></svg>',
+  jus: '<svg viewBox="0 0 48 48" fill="none" stroke="#1565A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 12h14l2 7c1 7-3 17-9 17s-10-10-9-17z"/><path d="M24 6v6" stroke-width="1.5"/><path d="M19 19h10" stroke-width="1.5"/></svg>'
+};
+
+const dishes=[
+  {id:1,cat:'entrees',icon:'salade',price:'7 DT',tag:'Populaire',
+   fr:{name:'Salade Mechouia',desc:'Poivrons et tomates grillés, harissa, câpres, huile d\'olive'},
+   en:{name:'Mechouia Salad',desc:'Grilled peppers and tomatoes, harissa, capers, olive oil'},
+   ar:{name:'سلطة مشوية',desc:'فلفل وطماطم مشوية، هريسة، كبار، زيت زيتون'}},
+  {id:2,cat:'entrees',icon:'brik',price:'5 DT',tag:'',
+   fr:{name:'Brik à l\'Œuf',desc:'Feuille croustillante, œuf coulant, thon, persil, câpres'},
+   en:{name:'Egg Brik',desc:'Crispy pastry, runny egg, tuna, parsley, capers'},
+   ar:{name:'بريك بالبيض',desc:'عجينة مقرمشة، بيض، تونة، بقدونس، كبار'}},
+  {id:3,cat:'plats',icon:'couscous',price:'18 DT',tag:'Best-seller',
+   fr:{name:'Couscous Agneau',desc:'Couscous vapeur maison, agneau fondant, légumes du marché'},
+   en:{name:'Lamb Couscous',desc:'Homemade steamed couscous, tender lamb, market vegetables'},
+   ar:{name:'كسكسي بالغنم',desc:'كسكسي بيتي، لحم غنم طري، خضروات الموسم'}},
+  {id:4,cat:'plats',icon:'poisson',price:'22 DT',tag:'Saison',
+   fr:{name:'Dorade Grillée',desc:'Dorade fraîche, charmoula maison, légumes grillés'},
+   en:{name:'Grilled Sea Bream',desc:'Fresh sea bream, homemade charmoula, grilled vegetables'},
+   ar:{name:'سمك الدنيس المشوي',desc:'سمك دنيس طازج، شرمولة بيتية، خضروات مشوية'}},
+  {id:5,cat:'plats',icon:'tajine',price:'16 DT',tag:'Épicé',
+   fr:{name:'Tajine Kefta',desc:'Boulettes épicées, sauce tomate maison, œufs pochés'},
+   en:{name:'Kefta Tagine',desc:'Spiced meatballs, homemade tomato sauce, poached eggs'},
+   ar:{name:'طاجين كفتة',desc:'كرات لحم متبلة، صلصة طماطم، بيض مسلوق'}},
+  {id:6,cat:'plats',icon:'lablabi',price:'14 DT',tag:'',
+   fr:{name:'Lablabi',desc:'Soupe de pois chiches, harissa, cumin, pain grillé'},
+   en:{name:'Lablabi',desc:'Chickpea soup, harissa, cumin, toasted bread'},
+   ar:{name:'لبلابي',desc:'شوربة حمص، هريسة، كمون، خبز محمص'}},
+  {id:7,cat:'desserts',icon:'makroudh',price:'6 DT',tag:'Best-seller',
+   fr:{name:'Makroudh',desc:'Semoule, pâte de dattes, miel, fleur d\'oranger'},
+   en:{name:'Makroudh',desc:'Semolina, date paste, honey, orange blossom'},
+   ar:{name:'مقروض',desc:'سميد، معجون تمر، عسل، ماء الزهر'}},
+  {id:8,cat:'desserts',icon:'zgougou',price:'5 DT',tag:'',
+   fr:{name:'Assidat Zgougou',desc:'Crème de pignons de pin, sirop de grenadine'},
+   en:{name:'Assidat Zgougou',desc:'Pine nut cream, grenadine syrup'},
+   ar:{name:'عصيدة زقوقو',desc:'كريمة صنوبر، شراب رمان'}},
+  {id:9,cat:'boissons',icon:'the',price:'3 DT',tag:'',
+   fr:{name:'Thé à la Menthe',desc:'Thé vert, menthe fraîche, sucre'},
+   en:{name:'Mint Tea',desc:'Green tea, fresh mint, sugar'},
+   ar:{name:'شاي بالنعناع',desc:'شاي أخضر، نعناع طازج، سكر'}},
+  {id:10,cat:'boissons',icon:'jus',price:'4 DT',tag:'',
+   fr:{name:'Jus de Grenade',desc:'Grenade tunisienne pressée à froid, sans sucre ajouté'},
+   en:{name:'Pomegranate Juice',desc:'Cold-pressed Tunisian pomegranate, no added sugar'},
+   ar:{name:'عصير رمان',desc:'رمان تونسي معصور على البارد، بدون سكر مضاف'}}
+];
+
+const hours={
+  fr:[{day:'Lundi',h:'12h00 – 22h00'},{day:'Mardi',h:'12h00 – 22h00'},{day:'Mercredi',h:'12h00 – 22h00'},{day:'Jeudi',h:'12h00 – 23h00'},{day:'Vendredi',h:'11h00 – 23h30'},{day:'Samedi',h:'11h00 – 23h30'},{day:'Dimanche',h:'Fermé',closed:true}],
+  en:[{day:'Monday',h:'12:00 – 10:00 PM'},{day:'Tuesday',h:'12:00 – 10:00 PM'},{day:'Wednesday',h:'12:00 – 10:00 PM'},{day:'Thursday',h:'12:00 – 11:00 PM'},{day:'Friday',h:'11:00 AM – 11:30 PM'},{day:'Saturday',h:'11:00 AM – 11:30 PM'},{day:'Sunday',h:'Closed',closed:true}],
+  ar:[{day:'الاثنين',h:'12:00 – 22:00'},{day:'الثلاثاء',h:'12:00 – 22:00'},{day:'الأربعاء',h:'12:00 – 22:00'},{day:'الخميس',h:'12:00 – 23:00'},{day:'الجمعة',h:'11:00 – 23:30'},{day:'السبت',h:'11:00 – 23:30'},{day:'الأحد',h:'مغلق',closed:true}]
+};
+
+const tx={
+  fr:{heroTitle:'Saveurs de <em>Tunisie</em>,<br/>face à la mer',heroSub:'Recettes traditionnelles, produits du marché, accueil chaleureux.',
+    openStatus:'Ouvert maintenant',closedStatus:'Fermé maintenant',
+    chipFresh:'Produits frais',chipFast:'Service rapide',chipRated:'4.8 / 5',
+    labelMenu:'Le menu',labelHours:'Horaires',labelReviews:'Avis',labelContact:'Contact',
+    tabAll:'Tout',tabE:'Entrées',tabP:'Plats',tabD:'Desserts',tabB:'Boissons',
+    navMenu:'Menu',navH:'Horaires',navR:'Avis',navC:'Contact',
+    leaveReview:'Donnez votre avis',submitBtn:'Envoyer',reviewPH:'Partagez votre expérience...',
+    reviewCount:'127 avis',todayLbl:'Auj.',
+    cPhLbl:'Téléphone',cAdLbl:'Adresse',cAdVal:'8 Rue Sidi Bou Saïd, Tunis',
+    toastOk:'Merci pour votre avis',toastStars:'Choisissez une note d\'abord',verified:'Vérifié',dishCount:'plats'},
+  en:{heroTitle:'Tunisian flavors,<br/>by the <em>sea</em>',heroSub:'Traditional recipes, market produce, warm welcome.',
+    openStatus:'Open now',closedStatus:'Closed now',
+    chipFresh:'Fresh produce',chipFast:'Fast service',chipRated:'4.8 / 5',
+    labelMenu:'The menu',labelHours:'Hours',labelReviews:'Reviews',labelContact:'Contact',
+    tabAll:'All',tabE:'Starters',tabP:'Mains',tabD:'Desserts',tabB:'Drinks',
+    navMenu:'Menu',navH:'Hours',navR:'Reviews',navC:'Contact',
+    leaveReview:'Leave a review',submitBtn:'Submit',reviewPH:'Share your experience...',
+    reviewCount:'127 reviews',todayLbl:'Today',
+    cPhLbl:'Phone',cAdLbl:'Address',cAdVal:'8 Rue Sidi Bou Saïd, Tunis',
+    toastOk:'Thanks for your review',toastStars:'Pick a rating first',verified:'Verified',dishCount:'dishes'},
+  ar:{heroTitle:'نكهات تونسية<br/>على ضفاف <em>البحر</em>',heroSub:'وصفات تقليدية، منتجات السوق، استقبال دافئ.',
+    openStatus:'مفتوح الآن',closedStatus:'مغلق الآن',
+    chipFresh:'منتجات طازجة',chipFast:'خدمة سريعة',chipRated:'4.8 / 5',
+    labelMenu:'القائمة',labelHours:'الأوقات',labelReviews:'الآراء',labelContact:'تواصل',
+    tabAll:'الكل',tabE:'مقبلات',tabP:'أطباق رئيسية',tabD:'حلويات',tabB:'مشروبات',
+    navMenu:'القائمة',navH:'الأوقات',navR:'الآراء',navC:'اتصل',
+    leaveReview:'اترك رأيك',submitBtn:'إرسال',reviewPH:'شاركنا تجربتك...',
+    reviewCount:'127 تقييم',todayLbl:'اليوم',
+    cPhLbl:'هاتف',cAdLbl:'العنوان',cAdVal:'8 شارع سيدي بوسعيد، تونس',
+    toastOk:'شكرًا على تقييمك',toastStars:'اختر تقييمًا أولاً',verified:'موثق',dishCount:'أطباق'}
+};
+
+const sampleRevs=[
+  {name:'Sarah M.',stars:5,date:'2j',text:{fr:'Couscous excellent, vue magnifique et service rapide.',en:'Excellent couscous, beautiful view and fast service.',ar:'كسكسي ممتاز، إطلالة رائعة وخدمة سريعة.'},verified:true},
+  {name:'Ahmed K.',stars:5,date:'1 sem',text:{fr:'Le brik à l\'œuf est parfait. Ambiance Sidi Bou Saïd authentique.',en:'The egg brik is perfect. Authentic Sidi Bou Said atmosphere.',ar:'البريك بالبيض مثالي. أجواء سيدي بوسعيد الأصيلة.'},verified:true},
+  {name:'Marie F.',stars:4,date:'2 sem',text:{fr:'Très bon rapport qualité-prix, makroudh excellent.',en:'Great value for money, excellent makroudh.',ar:'قيمة ممتازة مقابل السعر، مقروض رائع.'},verified:false}
+];
+
+let lang='fr',rating=0,localRevs=[],curFilter='all';
+
+function toggleLangMenu(e){
+  e.stopPropagation();
+  document.getElementById('lang-switch').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  const sw=document.getElementById('lang-switch');
+  if(sw.classList.contains('open') && !sw.contains(e.target)){
+    sw.classList.remove('open');
+  }
+});
+
+const langLabels={fr:'FR',en:'EN',ar:'ع'};
+
+function setLang(l){
+  lang=l;document.documentElement.lang=l;
+  document.getElementById('body').classList.toggle('rtl',l==='ar');
+  document.querySelectorAll('.lang-opt').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  document.getElementById('medallion-label').textContent=langLabels[l];
+  document.getElementById('lang-switch').classList.remove('open');
+  applyTx();renderMenu();renderHours();renderReviews();
+}
+
+function applyTx(){
+  const t=tx[lang];
+  document.getElementById('open-status').textContent=isOpen()?t.openStatus:t.closedStatus;
+  document.getElementById('status-dot').classList.toggle('closed',!isOpen());
+  document.getElementById('hero-title').innerHTML=t.heroTitle;
+  document.getElementById('hero-sub').textContent=t.heroSub;
+  document.getElementById('chip-fresh').textContent=t.chipFresh;
+  document.getElementById('chip-fast').textContent=t.chipFast;
+  document.getElementById('chip-rated').textContent=t.chipRated;
+  document.getElementById('label-menu').textContent=t.labelMenu;
+  document.getElementById('label-hours').textContent=t.labelHours;
+  document.getElementById('label-reviews').textContent=t.labelReviews;
+  document.getElementById('label-contact').textContent=t.labelContact;
+  document.getElementById('tab-all').textContent=t.tabAll;
+  document.getElementById('tab-entrees').textContent=t.tabE;
+  document.getElementById('tab-plats').textContent=t.tabP;
+  document.getElementById('tab-desserts').textContent=t.tabD;
+  document.getElementById('tab-boissons').textContent=t.tabB;
+  document.getElementById('nav-menu-lbl').textContent=t.navMenu;
+  document.getElementById('nav-hours-lbl').textContent=t.navH;
+  document.getElementById('nav-reviews-lbl').textContent=t.navR;
+  document.getElementById('nav-contact-lbl').textContent=t.navC;
+  document.getElementById('leave-review-title').textContent=t.leaveReview;
+  document.getElementById('submit-btn').textContent=t.submitBtn;
+  document.getElementById('review-input').placeholder=t.reviewPH;
+  document.getElementById('review-count').textContent=t.reviewCount;
+  document.getElementById('c-phone-lbl').textContent=t.cPhLbl;
+  document.getElementById('c-addr-lbl').textContent=t.cAdLbl;
+  document.getElementById('c-addr-val').textContent=t.cAdVal;
+}
+
+function isOpen(){return new Date().getDay()!==0}
+
+function renderMenu(){
+  const grid=document.getElementById('menu-grid');
+  const list=curFilter==='all'?dishes:dishes.filter(d=>d.cat===curFilter);
+  document.getElementById('dish-count').textContent=list.length+' '+tx[lang].dishCount;
+  grid.innerHTML=list.map(d=>{
+    const info=d[lang];
+    return `<div class="mcard">
+      <div class="dish-illust">${ICONS[d.icon]}</div>
+      <div class="mcard-mid">
+        <div class="mcard-top"><div class="mcard-name">${info.name}</div><div class="mcard-price">${d.price}</div></div>
+        <div class="mcard-desc">${info.desc}</div>
+        ${d.tag?`<div class="mcard-tag">${d.tag}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterMenu(cat,btn){
+  curFilter=cat;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu();
+}
+
+function renderHours(){
+  const grid=document.getElementById('hours-grid');
+  const ti=(new Date().getDay()+6)%7;
+  const list=hours[lang];
+  grid.innerHTML=list.map((r,i)=>{
+    const t=i===ti;
+    return `<div class="hrow${t?' today':''}">
+      <div class="hday">${r.day}${t?`<span class="today-pill">${tx[lang].todayLbl}</span>`:''}</div>
+      <div class="${r.closed?'hclosed':'htime'}">${r.h}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderReviews(){
+  const list=document.getElementById('reviews-list');
+  const all=[...localRevs,...sampleRevs];
+  list.innerHTML=all.map(r=>{
+    const txt=typeof r.text==='object'?r.text[lang]:r.text;
+    return `<div class="rev-card">
+      <div class="rev-hdr">
+        <div><div class="rev-name">${r.name}</div>${r.verified?`<div class="verified">✓ ${tx[lang].verified}</div>`:''}</div>
+        <div class="rev-date">${r.date}</div>
+      </div>
+      <div class="rev-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <div class="rev-text">${txt}</div>
+    </div>`;
+  }).join('');
+}
+
+function setRating(v){
+  rating=v;
+  document.querySelectorAll('.star-btn').forEach(s=>s.classList.toggle('lit',parseInt(s.dataset.v)<=v));
+}
+
+function submitReview(){
+  const t=tx[lang];
+  if(!rating){showToast(t.toastStars);return}
+  const text=document.getElementById('review-input').value.trim();
+  if(!text)return;
+  localRevs.unshift({name:'Vous',stars:rating,date:'now',text,verified:false});
+  document.getElementById('review-input').value='';
+  setRating(0);renderReviews();showToast(t.toastOk);
+}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+applyTx();renderMenu();renderHours();renderReviews();
+</script>
+</body>
+</html>
